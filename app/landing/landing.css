@@ -1,0 +1,46 @@
+/* Bubbles animation */
+.bubbles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -100px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(173, 216, 230, 0.3));
+  backdrop-filter: blur(1px);
+  animation: rise var(--duration) ease-in infinite;
+  animation-delay: var(--delay);
+  left: var(--left);
+  opacity: 0;
+}
+
+@keyframes rise {
+  0% {
+    bottom: -100px;
+    opacity: 0;
+    transform: translateX(0) scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(calc(sin(var(--left)) * 100px)) scale(1);
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(calc(sin(var(--left)) * 200px)) scale(0.5);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bubble {
+    --size: calc(var(--size) * 0.7);
+  }
+}
