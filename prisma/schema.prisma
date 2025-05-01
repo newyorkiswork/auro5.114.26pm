@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  role      String    @default("user")
+  phone     String?
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Laundromat {
+  id          String      @id @default(cuid())
+  name        String
+  address     String
+  lat         Float
+  lng         Float
+  machines    Machine[]
+  bookings    Booking[]
+  promotions  Promotion[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Machine {
+  id           String     @id @default(cuid())
+  name         String
+  type         String
+  capacity     Int
+  status       String     @default("available")
+  laundromat   Laundromat @relation(fields: [laundromatId], references: [id])
+  laundromatId String
+  bookings     Booking[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Booking {
+  id           String     @id @default(cuid())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  laundromat   Laundromat @relation(fields: [laundromatId], references: [id])
+  laundromatId String
+  machines     Machine[]
+  timeSlot     DateTime
+  status       String     @default("pending")
+  cycleType    String?
+  soilLevel    String?
+  drynessLevel String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Promotion {
+  id           String     @id @default(cuid())
+  title        String
+  description  String
+  discount     Int
+  startDate    DateTime
+  endDate      DateTime
+  laundromat   Laundromat @relation(fields: [laundromatId], references: [id])
+  laundromatId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+} 
